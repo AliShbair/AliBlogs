@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const blogRoutes = require('./routes/blogRoutes')
 const path = require("path");
 const connectLivereload = require("connect-livereload");
+const helmet = require('helmet');
+require("dotenv/config");
 const app = express();
 
 // auto refresh
@@ -18,16 +20,14 @@ liveReloadServer.server.once("connection", () => {
 }); 
 
 // connect to MongoDB
-const dbUrl =
-  "mongodb+srv://ali:123Test456@AliBlogs.fvqa4.mongodb.net/ali-blogs?retryWrites=true&w=majority";
 const connectionParams = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
   
 mongoose
-  .connect(dbUrl, connectionParams)
-  .then((result) => app.listen(3000))
+  .connect(process.env.DB_CONNECTION, connectionParams)
+  .then((result) => app.listen(process.env.PORT || 3000))
   .catch((err) => console.log("Error: ", err));
 
 // register view engine
@@ -40,6 +40,8 @@ app.use(morgan("dev"));
 // Middleware, won't be skipped until we assign the next function
 // another middleware, will be fired if no response already happened
 
+app.use(helmet())
+
 app.get("/", (req, res) => {
  res.redirect('/blogs')
 });
@@ -48,7 +50,8 @@ app.get("/about", (req, res) => {
   res.render("about", { title: "About" });
 });
 
-// redirect
+
+// redirect old, renamed paths
 app.get("/about-us", (req, res) => { 
   res.redirect("/about");
 });

@@ -20,7 +20,7 @@ const blog_details = (req, res) => {
    .catch((err) => res.status(404).render("404", { title: "404" }));
 }
 
-// get form page, put it above the id lines, otherwise code will read 'create' as an id
+// get form page, put it above the id codes, otherwise code will read 'create' as an id
 const blog_create_get = (req, res) => {
   res.render("blogs/create", { title: "Create Blog" });
 }
